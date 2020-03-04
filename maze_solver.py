@@ -13,7 +13,7 @@ sys.setrecursionlimit(10000)
 #recursive method
 def solveRecursiveMaze(arr,x,y):
     successful = False
-    if (x,y) == getExitPoint():
+    if (x,y) == (exitX,exitY):
         successful = True
     elif isValid(arr,x,y):
         arr[x][y] = "V" #set to V to show it's a visited path
