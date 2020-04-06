@@ -5,19 +5,19 @@ import sys
 # http://hereandabove.com/maze/mazeorig.form.html
 
 #recursive method
-def solveRecursiveMaze(arr, width, height, x,y):
+def solveRecursiveMaze(arr, width, height, exitX, exitY, x,y):
     successful = False
-    if (x,y) == getExitPoint(arr,width,height):
+    if (x,y) == (exitX,exitY):
         successful = True
     elif isValid(arr,width,height,x,y):
         arr[x][y] = "V" #set to V to show it's a visited path
-        successful = solveRecursiveMaze(arr, width, height, x-1, y)  
+        successful = solveRecursiveMaze(arr, width, height, exitX, exitY, x-1, y)  
         if not successful:
-            successful = solveRecursiveMaze(arr, width, height,x, y+1)
+            successful = solveRecursiveMaze(arr, width, height, exitX, exitY, x, y+1)
         if not successful:
-            successful = solveRecursiveMaze(arr, width, height,x+1, y)
+            successful = solveRecursiveMaze(arr, width, height, exitX, exitY, x+1, y)
         if not successful:
-            successful = solveRecursiveMaze(arr, width, height,x, y-1)  
+            successful = solveRecursiveMaze(arr, width, height, exitX, exitY, x, y-1)  
     if successful:
         arr[x][y] = "P" #Mark as P to show it's a valid path
     return successful
@@ -40,6 +40,7 @@ def getEntryPoint(arr, width, height):
     for y in range(1, height - 1):
         if(arr[1][y] == 'W'):
             return 1,y
+    raise Exception("Entry point was not found!")
 
 #find the exitPoint of the maze
 def getExitPoint(arr, width, height):
@@ -52,6 +53,7 @@ def getExitPoint(arr, width, height):
     for y in range(1, height - 1):
         if arr[width - 2][y] == 'W':
             return width - 2,y
+    raise Exception("Exit point was not found!")
 
 #Loop through the array and draw the solution
 def drawSolution(arr,width,height):
@@ -61,11 +63,12 @@ def drawSolution(arr,width,height):
             charToRGB = {
                 'W' : (255,255,255),
                 'B' : (0,0,0),
-                'P' : (255,0,0),
-                'V' : (255,255,255)
+                'P' : (0,255,0),
+                'V' : (255,0,128)
             }
             newImg.putpixel((x, y),charToRGB[arr[x][y]])
     newImg.save("solution.png","png")
+    newImg.show()
 
 
 #2D array of each pixel, "W" representing a white pixel. "B" is representing a black pixel
@@ -85,11 +88,12 @@ def convertImageToArray(imageName):
 
 def main():
     solved = False
-    maze,width,height = convertImageToArray("maze1.png")
+    maze,width,height = convertImageToArray("maze.png")
     x,y = getEntryPoint(maze,width,height)
-    print("Entering maze at x = %d, y = %d", (x,y))   
+    w,z = getExitPoint(maze,width,height)
+    print("Entering maze at x = %d, y = %d"%(x,y))   
     #if it is solved, draw the solution, if not just draw the entry/exit points
-    solved = solveRecursiveMaze(maze,width,height,x,y)
+    solved = solveRecursiveMaze(maze,width,height,w,z,x,y)
     if not solved:
         print("Cannot find solution")
     else:
