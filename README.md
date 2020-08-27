@@ -9,7 +9,7 @@
 
 ### Usage
 
-Drop an NxN pixel PNG of a maze with a 1-pixel-wide path and 1-pixel-wide walls named "maze.png" and execute the script.
+Drop an NxN pixel PNG of a maze with a 1-pixel-wide path and 1-pixel-wide walls named "maze.png" in the same directory as the script and run it.
 
 
 
